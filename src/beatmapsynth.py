@@ -20,6 +20,7 @@ import sklearn.cluster
 import scipy
 import sys
 import argparse
+import shutil
 
 #Main Function:
 def beat_map_synthesizer(song_path, song_name, difficulty, model, k=5, version = 2):
@@ -128,7 +129,7 @@ def music_file_converter(song_path):
     elif song_path.endswith('.raw'):
         AudioSegment.from_raw(song_path).export('song.egg', format='ogg')
     elif song_path.endswith('.ogg') or song_path.endswith('.egg'):
-        os.rename(song_path, 'song.egg')
+        shutil.copy2(song_path, 'song.egg')
     else:
         print("Unsupported song file type. Choose a file of type .mp3, .wav, .flv, .raw, or .ogg.")
 
@@ -269,10 +270,10 @@ def HMM_notes_writer(beat_list, difficulty, version):
     """Writes a list of notes based on a Hidden Markov Model walk."""
     #Load model
     if version == 1:
-        with open(f"./models/HMM_{difficulty}.pkl", 'rb') as m:
+        with open(f"../../models/HMM_{difficulty}.pkl", 'rb') as m:
             MC = pickle.load(m)
     elif version == 2:
-        with open(f"./models/HMM_{difficulty}_v2.pkl", 'rb') as m:
+        with open(f"../../models/HMM_{difficulty}_v2.pkl", 'rb') as m:
             MC = pickle.load(m)
     #Set note placement rate dependent on difficulty level
     counter = 2
@@ -457,10 +458,10 @@ def segmented_HMM_notes_writer(y, sr, k, difficulty, version = 2):
     """This function writes the list of notes based on the segmented HMM model."""
     #Load model:
     if version == 1:
-        with open(f"./models/HMM_{difficulty}.pkl", 'rb') as m:
+        with open(f"../../models/HMM_{difficulty}.pkl", 'rb') as m:
             MC = pickle.load(m)
     elif version == 2:
-        with open(f"./models/HMM_{difficulty}_v2.pkl", 'rb') as m:
+        with open(f"../../models/HMM_{difficulty}_v2.pkl", 'rb') as m:
             MC = pickle.load(m)
             
     segments, beat_times, tempo = laplacian_segmentation(y, sr, k)
@@ -661,10 +662,10 @@ def rate_modulated_segmented_HMM_notes_writer(y, sr, k, difficulty, version):
     """Function to write the notes to a list after predicting with the rate modulated segmented HMM model."""
     #Load model:
     if version == 1:
-        with open(f"./models/HMM_{difficulty}.pkl", 'rb') as m:
+        with open(f"../../models/HMM_{difficulty}.pkl", 'rb') as m:
             MC = pickle.load(m)
     elif version == 2:
-        with open(f"./models/HMM_{difficulty}_v2.pkl", 'rb') as m:
+        with open(f"../../models/HMM_{difficulty}_v2.pkl", 'rb') as m:
             MC = pickle.load(m)
     
     segments, beat_times, bpm = laplacian_segmentation(y, sr, k)
